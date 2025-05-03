@@ -7,7 +7,7 @@ const setUpMulterStorage = multer.diskStorage({
     cb(null, path.resolve(__dirname, '../../../images'));
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, Date.now() + '-' + file.originalname);
   },
   
 });
@@ -24,10 +24,12 @@ uploadRouter.post('/', upload.single('hello'), (req, res) => {
       res.status(400).send('Invalid width or height. Both must be positive integers.');
       return;
     }
-    res.send(`Your image is available at: http://localhost:3000/api/resizedImages?name=${encodeURIComponent(req.file?.originalname as string)}&width=${width}&height=${height}`);
+    // res.send(req.file)
+    res.send(`Your image is available at: http://localhost:3000/api/resizedImages?name=${encodeURIComponent(req.file?.filename as string)}&width=${width}&height=${height}`);
     return;
 
   } catch (err) {
+    console.log(err)
     res.status(500).send('An error occurred while processing the upload.');
   }
 });
