@@ -1,8 +1,6 @@
 import express from 'express';
 import router from './routes/index';
 
-import fs from 'fs';
-import { promises as fsPromises } from 'fs';
 
 const app = express();
 const port = 3000;
