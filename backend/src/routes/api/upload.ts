@@ -9,25 +9,21 @@ const setUpMulterStorage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
-  
 });
 // intialize the router
 const uploadRouter = express.Router();
 
 const upload = multer({ storage: setUpMulterStorage });
-uploadRouter.post('/', upload.single('hello'), (req, res) => {
+uploadRouter.post('/', upload.single('image'), (req, res) => {
   try {
-
     // res.send(req.file)
     // res.send(`Your image is available at: http://localhost:3000/api/resizedImages?name=${encodeURIComponent(req.file?.filename as string)}&width=${width}&height=${height}`);
-    res.status(200).send('Your image is successfully uploaded');
+    res.status(200).json(req.file);
     return;
-
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).send('An error occurred while processing the upload.');
   }
 });
 
 export default uploadRouter;
- 

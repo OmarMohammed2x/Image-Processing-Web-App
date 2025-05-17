@@ -5,6 +5,6 @@ import resizeRouter from './api/resize';
 const router = express.Router();
 
 router.use('/upload', uploadRouter);
-router.use('/resize',resizeRouter)
+router.use('/resize', resizeRouter);
 
 export default router;

@@ -34,18 +34,29 @@ resizeRouter.get('/', async (req, res) => {
     const width = parseInt(req.query.width as string, 10);
     const height = parseInt(req.query.height as string, 10);
     const name = req.query.name as string;
-    const originalPath = path.join(__dirname, '..', '..','..', './', 'images', name);
+    const originalPath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      './',
+      'images',
+      name,
+    );
     const newImagePath = path.join(
       __dirname,
       '..',
-      '..','..',
+      '..',
+      '..',
       './',
       'resizedImages',
       name.replace(/\.jpg/i, `[${width}X${height}].jpg`),
     );
-    
+
     if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
-      res.status(400).send('Invalid width or height. Both must be positive integers.');
+      res
+        .status(400)
+        .send('Invalid width or height. Both must be positive integers.');
       return;
     }
     if (await isExisted(newImagePath)) {
