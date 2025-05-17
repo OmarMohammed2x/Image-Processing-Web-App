@@ -1,0 +1,10 @@
+/* normalize the page & generals */
+ body{
+    margin: 0;
+ }
+ * {
+    box-sizing: border-box;
+ }
+
+ /* styleing the nav  */
+ 
