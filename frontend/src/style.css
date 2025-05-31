@@ -1,10 +1,51 @@
 /* normalize the page & generals */
- body{
-    margin: 0;
- }
- * {
-    box-sizing: border-box;
- }
 
- /* styleing the nav  */
- 
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+/* styleing the nav  */
+body > nav {
+  max-width: 100%;
+  height: 60px;
+  background-color: #cae8bd;
+  margin: 0 0 40px 0;
+}
+body > nav > ul {
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+body > nav > ul > li {
+  border-right: 1px solid #b0db9c;
+  height: 100%;
+  flex-grow: 1;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s;
+}
+body > nav > ul > li:hover {
+  background-color: #b0db9c;
+}
+body > nav > ul > li > a {
+  font-size: 1.25em;
+  font-weight: 600;
+  color: #394932;
+}
+/* end nav */
+
