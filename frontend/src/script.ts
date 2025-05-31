@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const imagesContainer = document.querySelector('#images');
-  const ResizedImagesContainer = document.querySelector('#resizedImages');
+  const ResizedImagesContainer = document.querySelector(
+    '.resizedImagesContainer',
+  );
   const resizeForm = document.querySelector('#resize');
   const uploadForm = document.querySelector('#upload');
   // i used type assertion to make this input able to use HTMLInputElement interface
@@ -50,5 +52,27 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       alert('upload your file');
     }
+  });
+  resizeForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = (resizeForm.querySelector('#name') as HTMLInputElement)?.value;
+    const width = (resizeForm.querySelector('#width') as HTMLInputElement)
+      ?.value;
+    const height = (resizeForm.querySelector('#height') as HTMLInputElement)
+      ?.value;
+    fetch(
+      `http://localhost:3000/api/resize?name=${name}&width=${width}&height=${height}`,
+    ).then((data) => {
+        return data.text();
+      })
+      .then((imgUrl) => {
+        if (ResizedImagesContainer?.classList.contains('active')) {
+          return imgUrl;
+        } else {
+          ResizedImagesContainer?.classList.add('active');
+        }
+      console.log(ResizedImagesContainer?.classList)
+        // ResizedImagesContainer?.insertAdjacentHTML
+      })
   });
 });

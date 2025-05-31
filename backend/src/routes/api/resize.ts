@@ -76,13 +76,7 @@ resizeRouter.get('/', async (req, res) => {
         .catch((err) => {
           console.error('Error resizing image:', err);
         });
-      res.sendFile(newImagePath, (err) => {
-        if (err) {
-          return res.send(
-            'A problem occured during sending the Image after resizing',
-          );
-        }
-      });
+      res.send(newImagePath)
     }
   } catch (error) {
     res.status(500).send('An error occurred in the resize route');
