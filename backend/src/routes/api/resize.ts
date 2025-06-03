@@ -34,6 +34,9 @@ resizeRouter.get('/', async (req, res) => {
     const width = parseInt(req.query.width as string, 10);
     const height = parseInt(req.query.height as string, 10);
     const name = req.query.name as string;
+    if(!name.includes('.jpg')){
+      res.status(404).send('invalid image type')
+      }
     const originalPath = path.join(
       __dirname,
       '..',
@@ -55,17 +58,13 @@ resizeRouter.get('/', async (req, res) => {
 
     if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
       res
-        .status(400)
+        .status(403)
         .send('Invalid width or height. Both must be positive integers.');
       return;
     }
     if (await isExisted(newImagePath)) {
       // handle if the image is already existed
-      res.sendFile(newImagePath, (err) => {
-        if (err) {
-          return res.send('A problem occured during sending the Image');
-        }
-      });
+      res.status(401).send(newImagePath);
     } else {
       await sharp(originalPath)
         .resize(width, height)
@@ -75,8 +74,9 @@ resizeRouter.get('/', async (req, res) => {
         })
         .catch((err) => {
           console.error('Error resizing image:', err);
+          res.status(400).send('Error resizing image');
         });
-      res.send(newImagePath)
+      res.status(200).send(newImagePath);
     }
   } catch (error) {
     res.status(500).send('An error occurred in the resize route');

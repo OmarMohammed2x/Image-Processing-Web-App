@@ -16,7 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('this imageInput.files[0]: ', imageInput.files[0]);
       console.log('this imageInput.files: ', imageInput.files);
     }
-
+    if (!imageInput.files || !imageInput.files[0]?.name.includes('.jpg')) {
+      alert('invalid image type, only accepts .jpg images');
+      return;
+    }
     const formData = new FormData();
     if (imageInput?.files && imageInput.files[0]) {
       formData.append('image', imageInput.files[0]);
@@ -62,17 +65,52 @@ document.addEventListener('DOMContentLoaded', () => {
       ?.value;
     fetch(
       `http://localhost:3000/api/resize?name=${name}&width=${width}&height=${height}`,
-    ).then((data) => {
-        return data.text();
+    )
+      .then(async (res) => {
+        console.log(res.ok);
+        console.log(res.status);
+        if (!res.ok) {
+          const errorData = await res.text();
+          const error = new Error(errorData || 'unknown error') as Error & {
+            status?: number;
+          };
+          error.status = res.status;
+          throw error;
+        }
+        return res.text();
       })
       .then((imgUrl) => {
         if (ResizedImagesContainer?.classList.contains('active')) {
-          return imgUrl;
+          // normalize the image url to work on web
+          const newImagePath = imgUrl.replace(/\\/g, '/');
+          return newImagePath.replace('E:/Level four/Project', '../..');
         } else {
           ResizedImagesContainer?.classList.add('active');
+          // normalize the image url to work on web
+          const newImagePath = imgUrl.replace(/\\/g, '/');
+          return newImagePath.replace('E:/Level four/Project', '../..');
         }
-      console.log(ResizedImagesContainer?.classList)
-        // ResizedImagesContainer?.insertAdjacentHTML
       })
+      .then((imgUrl) => {
+        console.log(imgUrl);
+        ResizedImagesContainer?.insertAdjacentHTML(
+          'beforeend',
+          `<img src="${imgUrl}" alt="" />`,
+        );
+        (resizeForm as HTMLFormElement).reset();
+      })
+      .catch((error) => {
+        if (error.status == 400) {
+          alert('try upload your image first!, then resize it');
+        } else if (error.status == 401) {
+          alert('Image is already resized with the same dimensions');
+        } else if (error.status == 403) {
+          alert('invalid dimensions');
+        } else if (error.status == 404) {
+          alert('invalid image type');
+        } else {
+          alert('unknown error');
+        }
+      });
   });
 });
