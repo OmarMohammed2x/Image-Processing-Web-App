@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '.resizedImagesContainer',
   );
   const resizeForm = document.querySelector('#resize');
+  const nameInput = resizeForm?.querySelector('#name') as HTMLInputElement;
   const uploadForm = document.querySelector('#upload');
   // i used type assertion to make this input able to use HTMLInputElement interface
   const imageInput = document.querySelector(
@@ -16,8 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('this imageInput.files[0]: ', imageInput.files[0]);
       console.log('this imageInput.files: ', imageInput.files);
     }
-    if (!imageInput.files || !imageInput.files[0]?.name.includes('.jpg')) {
-      alert('invalid image type, only accepts .jpg images');
+    if (!imageInput.files || !imageInput.files[0]?.name.includes('.jpg') && !imageInput.files[0]?.name.includes('.jpeg')) {
+      alert('invalid image type, only accepts .jpg/.jpeg images');
       return;
     }
     const formData = new FormData();
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
               imagesContainer?.insertAdjacentHTML(
                 'beforeend',
-                `<img src="../../backend/images/${data.filename}" alt="Desert">`,
+                `<img src="../../backend/images/${data.filename}" alt="${data.filename}">`,
               );
               imageInput.value = '';
             }
@@ -58,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   resizeForm?.addEventListener('submit', (e) => {
     e.preventDefault();
-    const name = (resizeForm.querySelector('#name') as HTMLInputElement)?.value;
+    const name = nameInput?.value;
     const width = (resizeForm.querySelector('#width') as HTMLInputElement)
       ?.value;
     const height = (resizeForm.querySelector('#height') as HTMLInputElement)
@@ -113,6 +114,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
   });
+  imagesContainer?.addEventListener('click',(evnt)=>{
+    const target = evnt.target as Element;
+    if (target && target.matches('img')) {
+      Array.from(imagesContainer.children).forEach(img => {
+        img.classList.remove('selected');
+      })
+      target.classList.add('selected');
+      nameInput.value = (target as HTMLImageElement).alt;
+    }
+  })
   ResizedImagesContainer?.addEventListener('click', (evnt) => {
     const target = evnt.target as Element;
     if (target && target.matches('img')) {
