@@ -113,4 +113,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
   });
+  ResizedImagesContainer?.addEventListener('click', (evnt) => {
+    const target = evnt.target as Element;
+    if (target && target.matches('img')) {
+      const path = (target as HTMLImageElement).src;
+      const regex = /\/([^\/\[\]]+)\[(\d+)X(\d+)\]\.jpg$/;
+      const matchCases = path.match(regex);
+      if (matchCases) {
+        const name = matchCases[1];
+        const width = matchCases[2];
+        const height = matchCases[3];
+        const imgWindow = window.open(
+          '',
+          '_blank',
+          `width=${width},height=${height}`,
+        );
+        if (imgWindow) {
+          imgWindow.document.body.innerHTML = `
+  <body style="margin:0; display:flex; justify-content:center; align-items:center; height:100vh; background:#000;">
+    <img src="${path}" style="width:${width}px; height:${height}px;">
+  </body>
+`;
+        }
+      }
+
+      console.log(path.match(regex));
+    }
+  });
 });
