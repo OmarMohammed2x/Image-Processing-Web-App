@@ -13,10 +13,10 @@ After choosing the desired dimensions and clicking resize button , Your inputs v
 
 `http://localhost:3000/api/resize?width=number&height=number&name=imageName`
 ## scripts
-- type `npm run start` to run the server
-- type `npm run lint` to run eslint in backend or frontend folders
-- type `npm run format` to run the prettier
+- type `npm run start` to run the server on backend folder.
+- type `npm run lint` to run eslint in backend or frontend folders.
+- type `npm run format` to run the prettier.
 - type `npm run build` to transpile TS code.
-- type `npm run jasmine` to run tests.
+- type `npm run build` then `npm run jasmine` on backend folder to run tests .
 ## Caching
 If you tried to resize the image with the same dimensions more than one time you will encounter an alert telling you 'you have already resized this image with the same dimensions'

@@ -13,10 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   uploadForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (imageInput?.files && imageInput.files[0]) {
-      console.log('this imageInput.files[0]: ', imageInput.files[0]);
-      console.log('this imageInput.files: ', imageInput.files);
-    }
     if (
       !imageInput.files ||
       (!imageInput.files[0]?.name.includes('.jpg') &&
@@ -36,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
           return res.json();
         })
         .then((data) => {
-          console.log('this the data', data);
           const images = imagesContainer?.querySelectorAll('img');
           if (images) {
             const imageExists = Array.from(images).some((img) =>
@@ -72,8 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
       `http://localhost:3000/api/resize?name=${name}&width=${width}&height=${height}`,
     )
       .then(async (res) => {
-        console.log(res.ok);
-        console.log(res.status);
         if (!res.ok) {
           const errorData = await res.text();
           const error = new Error(errorData || 'unknown error') as Error & {
@@ -85,19 +78,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return res.text();
       })
       .then((imgUrl) => {
+        // normalize the image url to work on web
+        const newImagePath = imgUrl.replace(/\\/g, '/');
         if (ResizedImagesContainer?.classList.contains('active')) {
-          // normalize the image url to work on web
-          const newImagePath = imgUrl.replace(/\\/g, '/');
-          return newImagePath.replace('E:/Level four/Project', '../..');
+          return newImagePath;
         } else {
           ResizedImagesContainer?.classList.add('active');
-          // normalize the image url to work on web
-          const newImagePath = imgUrl.replace(/\\/g, '/');
-          return newImagePath.replace('E:/Level four/Project', '../..');
+
+          return newImagePath;
         }
       })
       .then((imgUrl) => {
-        console.log(imgUrl);
         ResizedImagesContainer?.insertAdjacentHTML(
           'beforeend',
           `<img src="${imgUrl}" alt="" />`,
@@ -152,8 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
 `;
         }
       }
-
-      console.log(path.match(regex));
     }
   });
 });

@@ -9,7 +9,6 @@ async function isExisted(path: string): Promise<boolean> {
     await fs.access(path, fs.constants.F_OK);
     return true;
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
