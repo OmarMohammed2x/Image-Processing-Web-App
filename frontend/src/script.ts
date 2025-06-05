@@ -17,7 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('this imageInput.files[0]: ', imageInput.files[0]);
       console.log('this imageInput.files: ', imageInput.files);
     }
-    if (!imageInput.files || !imageInput.files[0]?.name.includes('.jpg') && !imageInput.files[0]?.name.includes('.jpeg')) {
+    if (
+      !imageInput.files ||
+      (!imageInput.files[0]?.name.includes('.jpg') &&
+        !imageInput.files[0]?.name.includes('.jpeg'))
+    ) {
       alert('invalid image type, only accepts .jpg/.jpeg images');
       return;
     }
@@ -109,21 +113,23 @@ document.addEventListener('DOMContentLoaded', () => {
           alert('invalid dimensions');
         } else if (error.status == 404) {
           alert('invalid image type');
+        } else if (error.status == 405) {
+          alert('Enter the image name');
         } else {
           alert('unknown error');
         }
       });
   });
-  imagesContainer?.addEventListener('click',(evnt)=>{
+  imagesContainer?.addEventListener('click', (evnt) => {
     const target = evnt.target as Element;
     if (target && target.matches('img')) {
-      Array.from(imagesContainer.children).forEach(img => {
+      Array.from(imagesContainer.children).forEach((img) => {
         img.classList.remove('selected');
-      })
+      });
       target.classList.add('selected');
       nameInput.value = (target as HTMLImageElement).alt;
     }
-  })
+  });
   ResizedImagesContainer?.addEventListener('click', (evnt) => {
     const target = evnt.target as Element;
     if (target && target.matches('img')) {
@@ -131,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const regex = /\/([^\/\[\]]+)\[(\d+)X(\d+)\]\.jpg$/;
       const matchCases = path.match(regex);
       if (matchCases) {
-        const name = matchCases[1];
         const width = matchCases[2];
         const height = matchCases[3];
         const imgWindow = window.open(

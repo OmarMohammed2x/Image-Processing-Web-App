@@ -1,31 +1,15 @@
 import express from 'express';
 import path from 'path';
-import sharp from 'sharp';
 import { promises as fs } from 'fs';
+import resize from '../../utils/resize';
 const resizeRouter = express.Router();
-
-// async function resize(
-//   width: number,
-//   height: number,
-//   originalPath: string,
-//   newPath: string,
-// ) {
-//   await sharp(originalPath)
-//     .resize(Number(width), Number(height))
-//     .toFile(newPath)
-//     .then(() => {
-//       console.log('the image is successfullu resized <>');
-//     })
-//     .catch((err) => {
-//       console.error('Error resizing image:', err);
-//     });
-// }
 
 async function isExisted(path: string): Promise<boolean> {
   try {
     await fs.access(path, fs.constants.F_OK);
     return true;
-  } catch (err) {
+  } catch (error) {
+    console.log(error);
     return false;
   }
 }
@@ -34,9 +18,9 @@ resizeRouter.get('/', async (req, res) => {
     const width = parseInt(req.query.width as string, 10);
     const height = parseInt(req.query.height as string, 10);
     const name = req.query.name as string;
-    if(!name.includes('.jpg')){
-      res.status(404).send('invalid image type')
-      }
+    if (!name.includes('.jpg')) {
+      res.status(404).send('invalid image type');
+    }
     const originalPath = path.join(
       __dirname,
       '..',
@@ -61,24 +45,20 @@ resizeRouter.get('/', async (req, res) => {
         .status(403)
         .send('Invalid width or height. Both must be positive integers.');
       return;
+    } else if (!name) {
+      res.status(405).send('The image name is required!');
+      return;
     }
     if (await isExisted(newImagePath)) {
       // handle if the image is already existed
       res.status(401).send(newImagePath);
     } else {
-      await sharp(originalPath)
-        .resize(width, height)
-        .toFile(newImagePath)
-        .then(() => {
-          console.log('the image is successfullu resized');
-        })
-        .catch((err) => {
-          console.error('Error resizing image:', err);
-          res.status(400).send('Error resizing image');
-        });
+      await resize(width, height, originalPath, newImagePath);
+
       res.status(200).send(newImagePath);
     }
   } catch (error) {
+    console.log(error);
     res.status(500).send('An error occurred in the resize route');
   }
 });
